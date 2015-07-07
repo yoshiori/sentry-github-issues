@@ -15,9 +15,13 @@ class GitHubIssuesOptionsForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'e.g. xxxxxxxxxxxxxxxxxxxxxxxx'}),
         help_text=_('Enter your personal access token, create here https://github.com/settings/tokens/new'))
 
-    base_url = forms.CharField(label=_('API base url'),
+    api_endpoint = forms.CharField(label=_('API endpoint'),
+        widget=forms.TextInput(attrs={'placeholder': 'e.g. https://github.example.com/api/v3/'}),
+        help_text=_('if Github Enterprise, Enter api endpoint. '), required=False)
+
+    web_endpoint = forms.CharField(label=_('Web endpoint'),
         widget=forms.TextInput(attrs={'placeholder': 'e.g. https://github.example.com/'}),
-        help_text=_('if Github Enterprise, Enter base url. '), required=False)
+        help_text=_('if Github Enterprise, Enter web endpoint. '), required=False)
 
     label = forms.CharField(label=_('label'),
         widget=forms.TextInput(attrs={'placeholder': 'e.g. sentry'}),
@@ -45,9 +49,9 @@ class GitHubIssuesPlugin(IssuePlugin):
 
     def create_issue(self, request, group, form_data, **kwargs):
         repo = self.get_option('repo', group.project)
-        base_url = self.get_option('base_url', group.project)
-        endpoint = '%sapi/v3/' % base_url if base_url and base_url != "https://api.github.com/" else "https://api.github.com/"
-        url = '%srepos/%s/issues' % (endpoint, repo,)
+        api_endpoint = self.get_option('api_endpoint', group.project) or "https://api.github.com/"
+
+        url = '%srepos/%s/issues' % (api_endpoint, repo,)
         data = {
           "title": form_data['title'],
         }
@@ -88,5 +92,5 @@ class GitHubIssuesPlugin(IssuePlugin):
 
     def get_issue_url(self, group, issue_id, **kwargs):
         repo = self.get_option('repo', group.project)
-        base_url = self.get_option('base_url', group.project) or "https://github.com/"
-        return '%s%s/issues/%s' % (base_url, repo, issue_id)
+        web_endpoint = self.get_option('web_endpoint', group.project) or "https://github.com/"
+        return '%s%s/issues/%s' % (web_endpoint, repo, issue_id)
