@@ -88,5 +88,5 @@ class GitHubIssuesPlugin(IssuePlugin):
 
     def get_issue_url(self, group, issue_id, **kwargs):
         repo = self.get_option('repo', group.project)
-        base_url = self.get_option('base_url', group.project) or "https://api.github.com/"
+        base_url = self.get_option('base_url', group.project) or "https://github.com/"
         return '%s%s/issues/%s' % (base_url, repo, issue_id)
