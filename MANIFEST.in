@@ -1,0 +1,3 @@
+include setup.py README.md LICENSE.txt
+recursive-include src/sentry_github_issues/templates *
+global-exclude *~
