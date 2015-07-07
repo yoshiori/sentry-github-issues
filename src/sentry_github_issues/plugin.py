@@ -78,12 +78,12 @@ class GitHubIssuesPlugin(IssuePlugin):
                         pass
             else:
                 msg = unicode(e)
-            raise forms.ValidationError(_('Error communicating with GitHub: %s') % (msg,))
+            raise forms.ValidationError(_('Error communicating with GitHub issues: %s') % (msg,))
 
         try:
-            data = json.load(resp)
+            data = json.loads(resp.read())
         except Exception, e:
-            raise forms.ValidationError(_('Error decoding response from GitHub: %s') % (e,))
+            raise forms.ValidationError(_('Error decoding response from GitHub issues: %s') % (e,))
 
         return data['number']
 
