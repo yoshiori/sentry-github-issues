@@ -56,9 +56,9 @@ class GitHubIssuesPlugin(IssuePlugin):
           "title": form_data['title'],
         }
         data["body"] = '%s\n\n[<a href="%s">View on Sentry</a>]' % (form_data['description'], group.get_absolute_url())
-        label = self.get_option('label', group.project)
-        if label:
-            data["label"] = [label]
+        labels = self.get_option('label', group.project)
+        if labels:
+            data["labels"] = [x.strip() for x in labels.split(",")]
 
         req = urllib2.Request(url, json.dumps(data))
         req.add_header('User-Agent', 'sentry-issue-github/%s' % self.version)
